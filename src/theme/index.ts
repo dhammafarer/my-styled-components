@@ -1,4 +1,4 @@
-import baseStyled, { ThemedStyledInterface } from "styled-components";
+import baseStyled, { css, ThemedStyledInterface } from "styled-components";
 
 const colors = {
   primary: "#333",
@@ -18,10 +18,32 @@ const scale = [
   0,
   4,
   8,
-  16, 
+  16,
   32,
   64
-];
+].map(x => x + "px");
+
+type SpaceProperty = "p" | "m";
+export type SpaceScale = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | undefined;
+type SpaceDirection = "x" | "y" | "r" | "l" | "t" | "b" | "a";
+type SpaceArg = {[P in SpaceDirection]: SpaceScale}
+
+const s = (key: SpaceProperty, val: SpaceArg) => {
+  const prop = key === "p" ? "padding" : "margin";
+  const r = val.r || val.x || val.a;
+  const l = val.l || val.x || val.a;
+  const t = val.t || val.y || val.a;
+  const b = val.b || val.y || val.a;
+
+  return css`
+    ${prop}-right: ${r ? scale[r] : null};
+    ${prop}-left: ${l ? scale[l] : null};
+    ${prop}-top: ${t ? scale[t] : null};
+    ${prop}-bottom: ${b ? scale[b] : null};
+  `;
+}
+
+const space = (val: SpaceScale) => val ? scale[val] : null;
 
 const fsizes = [
   10,
@@ -34,7 +56,7 @@ const fsizes = [
   48,
   64,
   72
-]
+];
 
 const fontSizes = fsizes.map(x => x + "px");
 const lineHeights = fsizes.map(x => x * 1.25 + "px");
@@ -65,7 +87,9 @@ const theme = {
   fontSizes,
   lineHeights,
   maxWidth,
-  scale
+  scale,
+  s,
+  space,
 };
 
 export {
