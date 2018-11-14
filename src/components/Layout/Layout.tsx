@@ -53,7 +53,6 @@ export const Layout: React.SFC<{}> = ({ children }) => (
       }`
     }
     render={(data: Data) => {
-      console.log(theme);
       return (
         <ThemeProvider theme={theme}>
           <Root>

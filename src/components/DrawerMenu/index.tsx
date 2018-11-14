@@ -1,5 +1,5 @@
 import * as React from "react";
-import { MakeMenu } from "../containers/MakeMenu";
+import { MakeMenu } from "../utils/MakeMenu";
 import { Drawer } from "../Drawer";
 import { Hamburger } from "../Button/Hamburger";
 import { styled } from "src/theme";
@@ -9,7 +9,7 @@ const Content = styled.div`
   width: 100%;
 `
 
-const Nav: React.SFC<{}> = () => {
+const DrawerMenu: React.SFC<{}> = () => {
   return (
     <MakeMenu>
       {x =>
@@ -39,5 +39,5 @@ const Nav: React.SFC<{}> = () => {
 }
 
 export {
-  Nav
+  DrawerMenu
 };

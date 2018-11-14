@@ -1,3 +1,4 @@
-import { StyledButton as Button } from "./Button";
+import { styled } from "src/theme";
 
-export { Button };
+export const ButtonBase = styled.button`
+`;

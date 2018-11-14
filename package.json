@@ -8,6 +8,7 @@
     "babel-plugin-styled-components": "^1.8.0",
     "babel-preset-gatsby": "^0.1.2",
     "browser-locale": "^1.0.3",
+    "chroma-js": "^1.4.0",
     "classnames": "^2.2.6",
     "core-js": "^2.5.7",
     "gatsby": "^2.0.31",
@@ -47,6 +48,7 @@
     "generate:types": "gql-gen --schema http://localhost:8000/___graphql --template graphql-codegen-typescript-template --out ./src/graphql.d.ts/"
   },
   "devDependencies": {
+    "@types/chroma-js": "^1.4.0",
     "@types/classnames": "^2.2.6",
     "@types/moment": "^2.13.0",
     "@types/react": "^16.4.18",
