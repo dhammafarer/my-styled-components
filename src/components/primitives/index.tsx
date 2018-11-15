@@ -38,6 +38,17 @@ const getFromColor = getVal(theme.color);
 const getBackground = getFromColor("background", "bg");
 const getColor = getFromColor("color", "color");
 
+type Width = string | number;
+
+const width = (xs: Width[]) => xs
+  .map((x) => {
+    const val = (typeof x === "number" ? `${x * 100}%` : x);
+    return `width: ${val};`;
+  })
+  .map(theme.media);
+
+const getWidth = (props: any) => (props.width ? width(props.width) : "");
+
 interface SpaceProps {
   p?: Scale;
   px?: Scale;
@@ -66,7 +77,7 @@ const space = css<SpaceProps>`
 interface BoxProps extends SpaceProps {
   bg?: string;
   color?: string;
-  width?: number;
+  width?: number[] | string[];
 }
 
 const box = css<BoxProps>`
@@ -74,8 +85,10 @@ const box = css<BoxProps>`
   ${props => css`
     ${getBackground(props)};
     ${getColor(props)};
+    ${getWidth(props)};
     `
   }
+  box-sizing: border-box;
 `;
 
 export const Box = styled.div<BoxProps>`

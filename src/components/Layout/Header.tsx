@@ -36,7 +36,7 @@ export const BrandName = styled(Text)`
   font-weight: ${theme.fontWeight(4)};
   color: ${theme.colors.primary.main};
 
-  ${theme.devices.md} {
+  ${theme.devices[3]} {
     display: block;
   }
 `;

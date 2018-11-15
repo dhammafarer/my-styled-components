@@ -44,21 +44,23 @@ const breakpoints = {
   desktop: 2560,
 };
 
-export const devices = {
-  xs: `@media (min-width: 0px)`,
-  sm: `@media (min-width: 425px)`,
-  md: `@media (min-width: 768px)`,
-  lg: `@media (min-width: 1024px)`,
-  xl: `@media (min-width: 1440px)`,
-};
+export const devices = [
+  `@media (min-width: 0px)`,
+  `@media (min-width: 425px)`,
+  `@media (min-width: 768px)`,
+  `@media (min-width: 1024px)`,
+  `@media (min-width: 1440px)`,
+];
 
 const maxWidth = breakpoints.laptopL;
+
+const media = (s: string, i: number) => `${devices[i]} { ${s} }`;
+const color = (s: string) => pathOr(s, s.split("."), colors);
 
 const shape = {
   borderRadius: "4px",
 };
 
-const color = (s: string) => pathOr(s, s.split("."), colors);
 
 const theme = {
   color,
@@ -71,6 +73,7 @@ const theme = {
   lineHeights,
   maxWidth,
   shape,
+  media,
   space,
   shadow,
   zIndex,
