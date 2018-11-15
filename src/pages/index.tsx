@@ -7,10 +7,10 @@ const IndexPage: React.SFC<{}> = (() => {
   return (
     <Layout>
       <Box
-        bg="red"
-        p={2}
-        pl={4}
-        pt={4}
+        bg="grey.A400"
+        color="white"
+        py={6}
+        px={4}
       >
         test content of box
       </Box>

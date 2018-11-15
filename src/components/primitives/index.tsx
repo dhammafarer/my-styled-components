@@ -1,5 +1,43 @@
 import { Scale, styled, css, theme } from "src/theme";
 
+type DirectionName = "right" | "left" | "top" | "bottom";
+type DirectionCode = "r" | "l" | "t" | "b";
+type DirectionAxis = "x" | "y";
+interface Direction {
+  code: DirectionCode;
+  name: DirectionName;
+  axis: DirectionAxis;
+}
+
+const directions: Direction[] = [
+  {code: "r", axis: "x", name: "right"},
+  {code: "l", axis: "x", name: "left"},
+  {code: "t", axis: "y", name: "top"},
+  {code: "b", axis: "y", name: "bottom"},
+];
+
+const getDirectionValue = (fn: any) => (key: "padding" | "margin") => (props: any) => {
+  const k = key.slice(0, 1);
+
+  return directions
+    .reduce((acc, dir) => {
+      const val = (props[k + dir.code] || props[k + dir.axis] || props[k]);
+      return acc + (val ? `${key}-${dir.name}: ${fn(val)};\n` : "");
+    }, "");
+}
+
+const getSpaceValue = getDirectionValue(theme.space);
+const getMargin = getSpaceValue("margin");
+const getPadding = getSpaceValue("padding");
+
+const getVal = (fn: any) => (key: string, code: string) => (props: any) => {
+  return (props[code] ? `${key}: ${fn(props[code])};` : "");
+}
+
+const getFromColor = getVal(theme.color);
+const getBackground = getFromColor("background", "bg");
+const getColor = getFromColor("color", "color");
+
 interface SpaceProps {
   p?: Scale;
   px?: Scale;
@@ -17,43 +55,29 @@ interface SpaceProps {
   mb?: Scale;
 }
 
-interface BoxProps extends SpaceProps {
-  bg?: string;
-}
-
 const space = css<SpaceProps>`
   ${props => css`
      ${getPadding(props)}
+     ${getMargin(props)}
     `
   }
 `;
+
+interface BoxProps extends SpaceProps {
+  bg?: string;
+  color?: string;
+  width?: number;
+}
 
 const box = css<BoxProps>`
   ${space}
   ${props => css`
-    background: ${props => props.bg};
+    ${getBackground(props)};
+    ${getColor(props)};
     `
   }
-`
+`;
 
 export const Box = styled.div<BoxProps>`
   ${box}
 `;
-
-function getPadding(props: SpaceProps) {
-  const k = "p";
-
-  const r = props[`${k}r`] || props[`${k}x`] || props[k];
-  const l = props[`${k}l`] || props[`${k}x`] || props[k];
-  const t = props[`${k}t`] || props[`${k}y`] || props[k];
-  const b = props[`${k}b`] || props[`${k}y`] || props[k];
-
-  const val = (x: Scale | undefined) => x ? theme.space(x) : null;
-
-  return (`
-    padding-right: ${val(r)};
-    padding-left: ${val(l)};
-    padding-top: ${val(t)};
-    padding-bottom: ${val(b)};
-  `);
-}

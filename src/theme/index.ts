@@ -2,6 +2,7 @@ import baseStyled, { css as baseCss, ThemedCssFunction, ThemedStyledInterface } 
 import { shadows } from "./shadows";
 import { colors } from "./colors";
 import { unit } from "./utils";
+import { pathOr } from "ramda";
 
 const fonts = {
   sans: "Muli",
@@ -57,7 +58,10 @@ const shape = {
   borderRadius: "4px",
 };
 
+const color = (s: string) => pathOr(s, s.split("."), colors);
+
 const theme = {
+  color,
   colors,
   devices,
   dimension,
