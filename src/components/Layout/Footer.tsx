@@ -7,7 +7,7 @@ const Wrapper = styled.footer`
   justify-content: space-between;
   z-index: 100;
   boxShadow: 2px 2px 2px rgba(0,0,0,0.25);
-  background: ${props => props.theme.colors.primary.main};
+  background: ${props => props.theme.color("primary.main")};
   padding-top: ${props => props.theme.space(4)};
   padding-bottom: ${props => props.theme.space(4)};
 `;

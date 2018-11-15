@@ -175,3 +175,7 @@ export const Box = styled.div<BoxProps>`${box}`;
 export const Flex = styled.div<FlexProps>`${flex}`;
 export const Card = styled.div<CardProps>`${card}`;
 export const Text = styled.p<TextProps>`${text}`;
+
+export {
+  BoxProps, FlexProps, TextProps, CardProps
+}

@@ -3,8 +3,9 @@ import { MakeMenu } from "../utils/MakeMenu";
 import { Drawer } from "../Drawer";
 import { Hamburger } from "../Button/Hamburger";
 import { styled } from "src/theme";
+import { Box } from "../primitives";
 
-const Content = styled.div`
+const Content = styled(Box)`
   height: 100vh;
   width: 100%;
 `
@@ -25,6 +26,7 @@ const DrawerMenu: React.SFC<{}> = () => {
           >
             {y =>
               <Content
+                bg="grey.100"
               >
                 <button onClick={y.handleClose}>
                   Close

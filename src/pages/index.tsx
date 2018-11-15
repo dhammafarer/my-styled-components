@@ -2,6 +2,12 @@ import * as React from "react";
 import { withIntl } from "../i18n/withIntl";
 import { Layout } from "../components/Layout";
 import { Box, Flex, Card, Text } from "../components/primitives";
+import { styled } from "src/theme";
+
+const Heading = styled(Text)`
+  font-size: ${props => props.theme.fontSize(5)};
+  font-weight: ${props => props.theme.fontWeight(5)};
+`
 
 const IndexPage: React.SFC<{}> = (() => {
   return (
@@ -16,8 +22,11 @@ const IndexPage: React.SFC<{}> = (() => {
           radius={3}
         >
           <Box px={3} py={3}>
-            <Text letterSpacing={"tracked"} lineHeight={"copy"} textTransform={"uppercase"} as="h3" fontSize={[5]} fontWeight={5}>
+            <Heading mb={1} fontSize={[4,5]}>
               Heading
+            </Heading>
+            <Text fontWeight={0} fontSize={[1]}>
+              Subheading
             </Text>
           </Box>
           <Box bg="grey.800" width={[1]}px={3} py={3}>
