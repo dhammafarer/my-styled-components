@@ -30,11 +30,15 @@ const getSpaceValue = getDirectionValue(theme.space);
 const getMargin = getSpaceValue("margin");
 const getPadding = getSpaceValue("padding");
 
-const getVal = (fn: any) => (key: string, code: string) => (props: any) => {
+const getValFrom = (fn: any) => (key: string, code: string) => (props: any) => {
   return (props[code] ? `${key}: ${fn(props[code])};` : "");
-}
+};
 
-const getFromColor = getVal(theme.color);
+const getVal = (key: string, code: string) => (props: any) => {
+  return (props[code] ? `${key}: ${props[code]};` : "");
+};
+
+const getFromColor = getValFrom(theme.color);
 const getBackground = getFromColor("background", "bg");
 const getColor = getFromColor("color", "color");
 
@@ -80,6 +84,13 @@ interface BoxProps extends SpaceProps {
   width?: number[] | string[];
 }
 
+interface FlexProps extends BoxProps {
+  flexDirection?: string;
+  justifyContent?: string;
+  alignItems?: string;
+  flexWrap?: string;
+}
+
 const box = css<BoxProps>`
   ${space}
   ${props => css`
@@ -91,6 +102,21 @@ const box = css<BoxProps>`
   box-sizing: border-box;
 `;
 
+const flex = css<FlexProps>`
+  ${box}
+  ${props => css`
+    ${getVal("flex-direction", "flexDirection")(props)}
+    ${getVal("flex-wrap", "flexWrap")(props)}
+    ${getVal("justify-content", "justifyContent")(props)}
+    ${getVal("align-items", "alignItems")(props)}
+  `}
+  display: flex;
+`;
+
 export const Box = styled.div<BoxProps>`
   ${box}
+`;
+
+export const Flex = styled.div<FlexProps>`
+  ${flex}
 `;
