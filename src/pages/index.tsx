@@ -1,7 +1,7 @@
 import * as React from "react";
 import { withIntl } from "../i18n/withIntl";
 import { Layout } from "../components/Layout";
-import { Box, Flex, Card } from "../components/primitives";
+import { Box, Flex, Card, Text } from "../components/primitives";
 
 const IndexPage: React.SFC<{}> = (() => {
   return (
@@ -11,16 +11,19 @@ const IndexPage: React.SFC<{}> = (() => {
           bg="common.white"
           flexDirection="column"
           shadow={2}
-          width={[1/2]}
           border={2}
           borderColor="primary.dark"
           radius={3}
         >
-          <Box bg="primary.light" width={[1]} px={2} py={3}>
-            Title
+          <Box px={3} py={3}>
+            <Text letterSpacing={"tracked"} lineHeight={"copy"} textTransform={"uppercase"} as="h3" fontSize={[5]} fontWeight={5}>
+              Heading
+            </Text>
           </Box>
-          <Box bg="grey.800" width={[1]}px={2} py={3}>
-            Image
+          <Box bg="grey.800" width={[1]}px={3} py={3}>
+            <Text>
+              Text Body
+            </Text>
           </Box>
         </Card>
       </Flex>

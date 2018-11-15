@@ -39,12 +39,17 @@ const getVal = (key: string, code: string) => (props: any) => {
 };
 
 const getFromColor = getValFrom(theme.color);
+
 const getBackground = getFromColor("background", "bg");
 const getColor = getFromColor("color", "color");
 const getShadow = getValFrom(theme.shadow)("box-shadow", "shadow");
 const getBorder = getValFrom(theme.border)("border", "border");
 const getBorderColor = getValFrom(theme.color)("border-color", "borderColor");
 const getBorderRadius = getValFrom(theme.radius)("border-radius", "radius");
+const getFontWeight = getValFrom(theme.fontWeight)("font-weight", "fontWeight");
+const getFontFamily = getValFrom(theme.fontFamily)("font-family", "fontFamily");
+const getLineHeight = getValFrom(theme.lineHeight)("line-height", "lineHeight");
+const getLetterSpacing = getValFrom(theme.letterSpacing)("letter-spacing", "letterSpacing");
 
 type Width = string | number;
 
@@ -56,6 +61,12 @@ const width = (xs: Width[]) => xs
   .map(theme.media);
 
 const getWidth = (props: any) => (props.width ? width(props.width) : "");
+
+const fontSize = (xs: Scale[]) => xs
+  .map(x => `font-size: ${theme.fontSize(x)};`)
+  .map(theme.media);
+
+const getFontSize = (props: any) => (props.fontSize ? fontSize(props.fontSize) : "");
 
 interface SpaceProps {
   p?: Scale;
@@ -102,6 +113,16 @@ interface CardProps extends FlexProps {
   borderColor?: string;
 }
 
+interface TextProps extends BoxProps {
+  fontFamily?: string;
+  fontSize?: Scale[];
+  fontWeight?: Scale;
+  textTransform?: string;
+  textAlign?: string;
+  lineHeight?: string;
+  letterSpacing?: string;
+}
+
 const box = css<BoxProps>`
   ${space}
   ${props => css`
@@ -135,8 +156,22 @@ const card = css<CardProps>`
   overflow: hidden;
 `;
 
+const text = css<TextProps>`
+  font-family: ${theme.fontFamily("sans")};
+  margin: 0;
+  padding: 0;
+  ${box}
+  ${props => css`
+    ${getFontSize(props)}
+    ${getFontWeight(props)}
+    ${getFontFamily(props)}
+    ${getLineHeight(props)}
+    ${getLetterSpacing(props)}
+    ${getVal("text-transform", "textTransform")(props)}
+  `}
+`;
+
 export const Box = styled.div<BoxProps>`${box}`;
-
 export const Flex = styled.div<FlexProps>`${flex}`;
-
 export const Card = styled.div<CardProps>`${card}`;
+export const Text = styled.p<TextProps>`${text}`;

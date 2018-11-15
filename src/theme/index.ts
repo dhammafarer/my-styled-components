@@ -22,6 +22,19 @@ const dimensions = unit("px", [16, 32, 64, 128, 256, 512, 768, 1024, 1536]);
 const zIndexes = [0, 100, 200, 300, 400, 500, 600, 700, 800];
 const borders = [0,1,2,3,4,5,6,7,8].map(n => `${n}px solid`);
 const radii = unit("px", [0,2,4,8,16,32,64,128]);
+const lineHeights = {
+  solid: 1,
+  title: 1.25,
+  copy: 1.5,
+};
+
+const letterSpacings = {
+  normal: "normal",
+  tracked: "0.1em",
+  tight: "-0.05em",
+  mega: "0.25em",
+};
+
 
 const space = (val: SpaceScale) => sizes[val];
 const fontSize = (val: FontSizeScale) => fontSizes[val];
@@ -31,12 +44,9 @@ const shadow = (val: Scale) => shadows[val];
 const zIndex = (val: Scale) => zIndexes[val];
 const border = (val: Scale) => borders[val];
 const radius = (val: Scale) => radii[val];
-
-const lineHeights = {
-  solid: 1,
-  title: 1.25,
-  copy: 1.5,
-};
+const fontFamily = (val: "sans" | "serif") => fonts[val];
+const lineHeight = (val: "solid" | "title" | "copy") => lineHeights[val];
+const letterSpacing = (val: "normal" | "tight" | "tracked" | "mega") => letterSpacings[val];
 
 const breakpoints = {
   mobileS: 320,
@@ -61,24 +71,19 @@ const maxWidth = breakpoints.laptopL;
 const media = (s: string, i: number) => `${devices[i]} { ${s} }`;
 const color = (s: string) => pathOr(s, s.split("."), colors);
 
-const shape = {
-  borderRadius: "4px",
-};
-
-
 const theme = {
   color,
   border,
   radius,
-  colors,
   devices,
   dimension,
   fonts,
   fontSize,
+  fontFamily,
   fontWeight,
-  lineHeights,
+  lineHeight,
+  letterSpacing,
   maxWidth,
-  shape,
   media,
   space,
   shadow,
