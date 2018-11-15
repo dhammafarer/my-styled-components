@@ -22,7 +22,7 @@ const Content = styled.div`
 
 const Main = styled.div`
   max-width: ${props => props.theme.maxWidth}px;
-  width: 50%;
+  width: 100%;
   margin: 0 auto;
   border: 1px solid orange;
   flex-grow: 1;

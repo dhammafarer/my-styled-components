@@ -3,8 +3,8 @@ import chroma from "chroma-js";
 const darken = (color: string) => (v: number) => chroma(color).darken(v).hex();
 const lighten = (color: string) => (v: number) => chroma(color).brighten(v).hex();
 
-const primary = "#832";
-const secondary = "#832";
+const primary = "rgb(36,140,204)";
+const secondary = "rgb(203,160,83)";
 
 export const colors = {
   primary: {

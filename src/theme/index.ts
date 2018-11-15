@@ -20,6 +20,8 @@ const fontSizes = unit("px", [ 12, 14, 16, 20, 24, 36, 48, 64, 72 ]);
 const fontWeights = [100, 200, 300, 400, 500,600, 700, 800, 900];
 const dimensions = unit("px", [16, 32, 64, 128, 256, 512, 768, 1024, 1536]);
 const zIndexes = [0, 100, 200, 300, 400, 500, 600, 700, 800];
+const borders = [0,1,2,3,4,5,6,7,8].map(n => `${n}px solid`);
+const radii = unit("px", [0,2,4,8,16,32,64,128]);
 
 const space = (val: SpaceScale) => sizes[val];
 const fontSize = (val: FontSizeScale) => fontSizes[val];
@@ -27,6 +29,8 @@ const fontWeight = (val: FontWeightScale) => fontWeights[val];
 const dimension = (val: DimensionScale) => dimensions[val];
 const shadow = (val: Scale) => shadows[val];
 const zIndex = (val: Scale) => zIndexes[val];
+const border = (val: Scale) => borders[val];
+const radius = (val: Scale) => radii[val];
 
 const lineHeights = {
   solid: 1,
@@ -64,6 +68,8 @@ const shape = {
 
 const theme = {
   color,
+  border,
+  radius,
   colors,
   devices,
   dimension,

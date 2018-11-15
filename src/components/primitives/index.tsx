@@ -41,6 +41,10 @@ const getVal = (key: string, code: string) => (props: any) => {
 const getFromColor = getValFrom(theme.color);
 const getBackground = getFromColor("background", "bg");
 const getColor = getFromColor("color", "color");
+const getShadow = getValFrom(theme.shadow)("box-shadow", "shadow");
+const getBorder = getValFrom(theme.border)("border", "border");
+const getBorderColor = getValFrom(theme.color)("border-color", "borderColor");
+const getBorderRadius = getValFrom(theme.radius)("border-radius", "radius");
 
 type Width = string | number;
 
@@ -91,6 +95,13 @@ interface FlexProps extends BoxProps {
   flexWrap?: string;
 }
 
+interface CardProps extends FlexProps {
+  shadow?: Scale;
+  radius?: Scale;
+  border?: Scale;
+  borderColor?: string;
+}
+
 const box = css<BoxProps>`
   ${space}
   ${props => css`
@@ -113,10 +124,19 @@ const flex = css<FlexProps>`
   display: flex;
 `;
 
-export const Box = styled.div<BoxProps>`
-  ${box}
+const card = css<CardProps>`
+  ${flex}
+  ${props => css`
+    ${getShadow(props)}
+    ${getBorder(props)}
+    ${getBorderColor(props)}
+    ${getBorderRadius(props)}
+  `}
+  overflow: hidden;
 `;
 
-export const Flex = styled.div<FlexProps>`
-  ${flex}
-`;
+export const Box = styled.div<BoxProps>`${box}`;
+
+export const Flex = styled.div<FlexProps>`${flex}`;
+
+export const Card = styled.div<CardProps>`${card}`;
