@@ -42,7 +42,7 @@ const getFromColor = getValFrom(theme.color);
 
 const getBackground = getFromColor("background", "bg");
 const getColor = getFromColor("color", "color");
-const getShadow = getValFrom(theme.shadow)("box-shadow", "shadow");
+const getBoxShadow = getValFrom(theme.shadow)("box-shadow", "shadow");
 const getBorder = getValFrom(theme.border)("border", "border");
 const getBorderColor = getValFrom(theme.color)("border-color", "borderColor");
 const getBorderRadius = getValFrom(theme.radius)("border-radius", "radius");
@@ -104,6 +104,7 @@ interface FlexProps extends BoxProps {
   justifyContent?: string;
   alignItems?: string;
   flexWrap?: string;
+  spacing?: Scale;
 }
 
 interface CardProps extends FlexProps {
@@ -113,10 +114,25 @@ interface CardProps extends FlexProps {
   borderColor?: string;
 }
 
+interface ButtonProps extends BoxProps{
+  shadow?: Scale;
+  radius?: Scale;
+  border?: Scale;
+  borderColor?: string;
+  fontFamily?: string;
+  fontSize?: Scale[];
+  fontWeight?: Scale;
+  textTransform?: string;
+  textAlign?: string;
+  lineHeight?: string;
+  letterSpacing?: string;
+}
+
 interface TextProps extends BoxProps {
   fontFamily?: string;
   fontSize?: Scale[];
   fontWeight?: Scale;
+  shadow?: Scale;
   textTransform?: string;
   textAlign?: string;
   lineHeight?: string;
@@ -142,24 +158,28 @@ const flex = css<FlexProps>`
     ${getVal("justify-content", "justifyContent")(props)}
     ${getVal("align-items", "alignItems")(props)}
   `}
+  ${props => (props.spacing && props.spacing > 0) && css`
+    padding: ${props.theme.space(props.spacing)};
+    & > * {
+      padding: ${props.theme.space(props.spacing)};
+    }
+  `} 
   display: flex;
 `;
 
 const card = css<CardProps>`
   ${flex}
   ${props => css`
-    ${getShadow(props)}
+    ${getBoxShadow(props)}
     ${getBorder(props)}
     ${getBorderColor(props)}
     ${getBorderRadius(props)}
   `}
   overflow: hidden;
+  flex-direction: column;
 `;
 
 const text = css<TextProps>`
-  font-family: ${theme.fontFamily("sans")};
-  margin: 0;
-  padding: 0;
   ${box}
   ${props => css`
     ${getFontSize(props)}
@@ -169,13 +189,42 @@ const text = css<TextProps>`
     ${getLetterSpacing(props)}
     ${getVal("text-transform", "textTransform")(props)}
   `}
+  font-family: ${theme.fontFamily("sans")};
+  margin: 0;
+  padding: 0;
+`;
+
+const button = css<ButtonProps>`
+  ${box}
+  ${props => css`
+    ${getBoxShadow(props)}
+    ${getBorder(props)}
+    ${getBorderColor(props)}
+    ${getBorderRadius(props)}
+    ${getFontSize(props)}
+    ${getFontWeight(props)}
+    ${getFontFamily(props)}
+    ${getLineHeight(props)}
+    ${getLetterSpacing(props)}
+    ${getVal("text-transform", "textTransform")(props)}
+  `}
+  font-family: ${theme.fontFamily("sans")};
+  text-decoration: none;
+  cursor: pointer;
+  &:hover {
+  }
+  &:focus {
+  }
+  &:active {
+  }
 `;
 
 export const Box = styled.div<BoxProps>`${box}`;
 export const Flex = styled.div<FlexProps>`${flex}`;
 export const Card = styled.div<CardProps>`${card}`;
 export const Text = styled.p<TextProps>`${text}`;
+export const Button = styled.button<ButtonProps>`${button}`;
 
 export {
-  BoxProps, FlexProps, TextProps, CardProps
+  BoxProps, FlexProps, TextProps, CardProps, ButtonProps
 }

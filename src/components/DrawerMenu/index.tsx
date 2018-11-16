@@ -3,7 +3,7 @@ import { MakeMenu } from "../utils/MakeMenu";
 import { Drawer } from "../Drawer";
 import { Hamburger } from "../Button/Hamburger";
 import { styled } from "src/theme";
-import { Box } from "../primitives";
+import { Box } from "src/theme/primitives";
 
 const Content = styled(Box)`
   height: 100vh;
