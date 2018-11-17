@@ -1,7 +1,6 @@
 import { always, identity, prop } from "ramda";
-import { getProperty } from "./getters";
+import { getP, getProperty } from "./getters";
 import { getWithDirections } from "./directional-getters";
-import { getResponsiveProperty } from "./responsive-getters";
 
 test("getProperty works for properties with literal values", () => {
   const props = {color: "red"};
@@ -41,20 +40,14 @@ test("getWithDirections", () => {
   expect(getWithDirections(dps)(fn)(property)(props)).toBe(expected);
 });
 
-test.skip("getResponsiveProperty", () => {
-  const fn = identity;
-  const getter = undefined;
+test("getP support template functions", () => {
+  const template = (property: string, vals: number[], fn: any) => `X { ${property}: ${fn(vals[0])}; }`;
+  const fn = (x: any) => `${x * 100}%`;
+  const getter = prop("width");
   const property = "width";
-  const props = {width: [1/2, 1]};
+  const props = {width: [1/2]};
 
-  const expected = `
-    @media (min-width: 600px) {
-      width: 50%;
-    }
-    @media (min-width: 1200px) {
-      width: 100%;
-    }
-  `;
+  const expected = `X { width: 50%; }`;
 
-  expect(getResponsiveProperty(fn)(getter)(property)(props)).toBe(expected);
+  expect(getP(template)(fn)(getter)(property)(props)).toBe(expected);
 });
