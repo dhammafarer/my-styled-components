@@ -8,7 +8,7 @@ interface ButtonProps {
 }
 
 const defaultStyle = css<ButtonProps>`
-  transition: all .3s eas-out;
+  transition: all .3s ease-out;
   color: ${theme.color("text.primary")};
   padding: ${theme.space(2)} ${theme.space(2)};
   border: ${theme.border(1)};
