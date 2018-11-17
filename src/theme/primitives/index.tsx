@@ -1,5 +1,6 @@
 import { Scale, styled, css, theme } from "src/theme";
-import { getProperty, getLiteral, getWithDirections } from "./getters";
+import { getProperty, getLiteral } from "./getters";
+import { getWithDirections } from "./directional-getters";
 import { prop } from "ramda";
 
 // directions map
