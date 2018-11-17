@@ -183,12 +183,6 @@ const button = css<ButtonProps>`
   font-family: ${theme.fontFamily("sans")};
   text-decoration: none;
   cursor: pointer;
-  &:hover {
-  }
-  &:focus {
-  }
-  &:active {
-  }
 `;
 
 export const Box = styled.div<BoxProps>`${box}`;

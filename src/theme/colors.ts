@@ -2,17 +2,21 @@ import { lighten, darken } from "./utils";
 
 const primary = "rgb(36,140,204)";
 const secondary = "rgb(203,160,83)";
+const white = "rgb(255,255,255)";
+const black = "rgb(0,0,0)";
 
 export const colors = {
   primary: {
-    light: lighten(primary)(1/5),
+    light: lighten(primary)(1/4),
     main: primary,
-    dark: darken(primary)(1/5),
+    dark: darken(primary)(1/4),
+    contrast: "rgba(255,255,255,0.9)",
   },
   secondary: {
-    light: lighten(secondary)(1/5),
+    light: lighten(secondary)(1/4),
     main: secondary,
-    dark: darken(secondary)(1/5),
+    dark: darken(secondary)(1/4),
+    contrast: "rgba(255,255,255,0.9)",
   },
   error: "red",
   divider: "rgba(0, 0, 0, 0.12)",
@@ -37,10 +41,22 @@ export const colors = {
     default: "#fafafa",
   },
   text: {
-    primary: "rgba(0, 0, 0, 0.87)",
-    secondary: "rgba(0, 0, 0, 0.54)",
-    disabled: "rgba(0, 0, 0, 0.38)",
-    hint: "rgba(0, 0, 0, 0.38)",
+    dark: "rgba(0, 0, 0, 0.87)",
+    main: "rgba(0, 0, 0, 0.54)",
+    light: "rgba(0, 0, 0, 0.38)",
+    contrast: "rgba(255, 255, 255, 0.9)",
+  },
+  white: {
+    dark: darken(white)(1/4),
+    main: darken(white)(1/5),
+    light: white,
+    contrast: "rgba(0, 0, 0, 0.9)",
+  },
+  black: {
+    dark: black,
+    main: lighten(black)(1/5),
+    light: lighten(black)(1/4),
+    contrast: "rgba(255, 255, 255, 0.9)",
   },
   common: {
     white: "#fff",

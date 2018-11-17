@@ -18,23 +18,32 @@ const IndexPage: React.SFC<{}> = (() => {
           Title
         </Flex>
         <Flex  justifyContent="center" bg="background.default" spacing={2}>
-          <Flex width={[1/3]}>
+          <Flex width={[1/4]}>
             <Button
               width={[1]}
-              variant="secondary"
+              variant="primary"
               contained
             >
               OK
             </Button>
           </Flex>
-          <Flex width={[1/3]}>
+          <Flex width={[1/4]}>
             <Button
               width={[1]}
+              variant="secondary"
             >
               Cancel
             </Button>
           </Flex>
-          <Flex width={[1/3]}>
+          <Flex width={[1/4]}>
+            <Button
+              width={[1]}
+              contained
+            >
+              Cancel
+            </Button>
+          </Flex>
+          <Flex width={[1/4]}>
             <Button
               width={[1]}
             >
