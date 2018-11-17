@@ -18,9 +18,14 @@ const getFromColor = getProperty(theme.color);
 const getBackground = getFromColor(prop("bg"))("background");
 const getColor = getFromColor(prop("color"))("color");
 const getBorderColor = getFromColor(prop("borderColor"))("border-color");
+const getBorderLeftColor = getFromColor(prop("blc"))("border-left-color");
+const getBorderRightColor = getFromColor(prop("brc"))("border-right-color");
+const getBorderTopColor = getFromColor(prop("btc"))("border-top-color");
+const getBorderBottomColor = getFromColor(prop("bbc"))("border-bottom-color");
 
 const getBoxShadow = getProperty(theme.shadow)(prop("shadow"))("box-shadow");
-const getBorder = getProperty(theme.border)(prop("border"))("border");
+//const getBorder = getProperty(theme.border)(prop("border"))("border");
+const getBorder = getWithDirections(dps)(theme.border)("border");
 const getBorderRadius = getProperty(theme.radius)(prop("radius"))("border-radius");
 
 const getFontWeight = getProperty(theme.fontWeight)(prop("fontWeight"))("font-weight");
@@ -82,14 +87,24 @@ interface FlexProps extends BoxProps {
 interface CardProps extends FlexProps {
   shadow?: Scale;
   radius?: Scale;
-  border?: Scale;
+  b?: Scale;
+  br?: Scale;
+  bl?: Scale;
+  bt?: Scale;
+  bb?: Scale;
+  bx?: Scale;
+  by?: Scale;
+  blc?: string;
+  brc?: string;
+  btc?: string;
+  bbc?: string;
   borderColor?: string;
 }
 
 interface ButtonProps extends BoxProps{
   shadow?: Scale;
   radius?: Scale;
-  border?: Scale;
+  b?: Scale;
   borderColor?: string;
   fontFamily?: string;
   fontSize?: Scale[];
@@ -145,6 +160,10 @@ const card = css<CardProps>`
     ${getBoxShadow(props)}
     ${getBorder(props)}
     ${getBorderColor(props)}
+    ${getBorderLeftColor(props)}
+    ${getBorderRightColor(props)}
+    ${getBorderTopColor(props)}
+    ${getBorderBottomColor(props)}
     ${getBorderRadius(props)}
   `}
   overflow: hidden;
