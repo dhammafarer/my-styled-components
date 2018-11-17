@@ -1,6 +1,5 @@
 import { always, identity, prop } from "ramda";
-import { getP, getProperty } from "./getters";
-import { getWithDirections } from "./directional-getters";
+import { getP, getProperty, getWithDirections } from "./getters";
 
 test("getProperty works for properties with literal values", () => {
   const props = {color: "red"};
@@ -24,7 +23,19 @@ test("getProperty works for with a custom function", () => {
   expect(getProperty(fn)(getter)(property)(props)).toBe(expected);
 });
 
-test("getWithDirections", () => {
+test("getP supports template functions", () => {
+  const template = (property: string, vals: number[], fn: any) => `X { ${property}: ${fn(vals[0])}; }`;
+  const fn = (x: any) => `${x * 100}%`;
+  const getter = prop("width");
+  const property = "width";
+  const props = {width: [1/2]};
+
+  const expected = `X { width: 50%; }`;
+
+  expect(getP(template)(fn)(getter)(property)(props)).toBe(expected);
+});
+
+test("getWithDirections outputs a set of properties with directions", () => {
   const props = {pl: 1, px: 2};
   const fn = identity;
   const property = "padding";
@@ -38,16 +49,4 @@ test("getWithDirections", () => {
   const expected = "padding-left: 1;\npadding-right: 2;";
 
   expect(getWithDirections(dps)(fn)(property)(props)).toBe(expected);
-});
-
-test("getP support template functions", () => {
-  const template = (property: string, vals: number[], fn: any) => `X { ${property}: ${fn(vals[0])}; }`;
-  const fn = (x: any) => `${x * 100}%`;
-  const getter = prop("width");
-  const property = "width";
-  const props = {width: [1/2]};
-
-  const expected = `X { width: 50%; }`;
-
-  expect(getP(template)(fn)(getter)(property)(props)).toBe(expected);
 });
