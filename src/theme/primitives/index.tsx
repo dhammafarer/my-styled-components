@@ -1,8 +1,10 @@
 import { Scale, styled, css, theme } from "src/theme";
 
+type DirectionProp = "padding" | "margin";
 type DirectionName = "right" | "left" | "top" | "bottom";
 type DirectionCode = "r" | "l" | "t" | "b";
 type DirectionAxis = "x" | "y";
+
 interface Direction {
   code: DirectionCode;
   name: DirectionName;
@@ -16,22 +18,23 @@ const directions: Direction[] = [
   {code: "b", axis: "y", name: "bottom"},
 ];
 
-const getDirectionValue = (fn: any) => (key: "padding" | "margin") => (props: any) => {
+// constructs a string with prop-direction values from a scale
+const getWithDirectionFrom = (scaleFn: any) => (key: DirectionProp) => (props: any) => {
   const k = key.slice(0, 1);
 
   return directions
     .reduce((acc, dir) => {
       const val = (props[k + dir.code] || props[k + dir.axis] || props[k]);
-      return acc + (val ? `${key}-${dir.name}: ${fn(val)};\n` : "");
+      return acc + (val ? `${key}-${dir.name}: ${scaleFn(val)};\n` : "");
     }, "");
 }
 
-const getSpaceValue = getDirectionValue(theme.space);
-const getMargin = getSpaceValue("margin");
-const getPadding = getSpaceValue("padding");
+const getSpacedDirectionFor = getWithDirectionFrom(theme.space);
+const getMargins = getSpacedDirectionFor("margin");
+const getPadding = getSpacedDirectionFor("padding");
 
-const getValFrom = (fn: any) => (key: string, code: string) => (props: any) => {
-  return (props[code] ? `${key}: ${fn(props[code])};` : "");
+const getValFrom = (spaceFn: any) => (key: string, propName: string) => (props: any) => {
+  return (props[propName] ? `${key}: ${spaceFn(props[propName])};` : "");
 };
 
 const getVal = (key: string, code: string) => (props: any) => {
@@ -88,7 +91,7 @@ interface SpaceProps {
 const space = css<SpaceProps>`
   ${props => css`
      ${getPadding(props)}
-     ${getMargin(props)}
+     ${getMargins(props)}
     `
   }
 `;
@@ -163,7 +166,7 @@ const flex = css<FlexProps>`
     & > * {
       padding: ${props.theme.space(props.spacing)};
     }
-  `} 
+  `}
   display: flex;
 `;
 
