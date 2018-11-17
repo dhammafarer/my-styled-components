@@ -1,34 +1,50 @@
-import { theme } from "src/theme";
+import { isEmpty, identity, ifElse, always, complement, map, compose, concat, prop, reduce, either, isNil } from "ramda";
 
-type DirectionProp = "padding" | "margin";
-type DirectionName = "right" | "left" | "top" | "bottom";
-type DirectionCode = "r" | "l" | "t" | "b";
-type DirectionAxis = "x" | "y";
+type Direction = "right" | "left" | "top" | "bottom";
+type DirectionCode = "r" | "l" | "t" | "b" | "x" | "y" | "";
 
-interface Direction {
-  code: DirectionCode;
-  name: DirectionName;
-  axis: DirectionAxis;
-}
+// css property template
+const template = (key:string, val: string) => `${key}: ${val};`;
 
-const directions: Direction[] = [
-  {code: "r", axis: "x", name: "right"},
-  {code: "l", axis: "x", name: "left"},
-  {code: "t", axis: "y", name: "top"},
-  {code: "b", axis: "y", name: "bottom"},
-];
+// parse props to build a css property as a string
+const getProperty = (fn: any) => (getter: any) => (property: string) => (props: any) =>
+  ifElse(
+    isNil,
+    always(""),
+    x => template(property, fn(x))
+  )(getter(props)
+);
 
-// constructs a string with prop-direction values from a scale
-const getWithDirectionFrom = (scaleFn: any) => (key: DirectionProp) => (props: any) => {
-  const k = key.slice(0, 1);
+// prefix each DirectionCode with property identifier, e.g. pr, ml, etc.
+const prefixProp = (pref: string) => compose(prop, concat(pref));
 
-  return directions
-    .reduce((acc, dir) => {
-      const val = (props[k + dir.code] || props[k + dir.axis] || props[k]);
-      return acc + (val ? `${key}-${dir.name}: ${scaleFn(val)};\n` : "");
-    }, "");
-}
+// make a prefix to identify property
+const getPrefix = (property: string) => property.slice(0,1);
 
-const getSpacedDirectionFor = getWithDirectionFrom(theme.space);
-export const getMargins = getSpacedDirectionFor("margin");
-export const getPadding = getSpacedDirectionFor("padding");
+// make a prefixed priority list of direction codes
+const makeList = (list: DirectionCode[]) => (pref: string) => map(prefixProp(pref), list);
+
+// helper function to get a property by applying a list of getter functions
+const getEither = reduce(either, isNil);
+
+// extract the property with direction value from props
+const getDirValue = (l: DirectionCode[]) => (p: string) => getEither(makeList(l)(getPrefix(p)));
+
+// build a css property with direction
+const getDirectionalProperty = (fn: any) => (dp: {dir: Direction, l: DirectionCode[]}) => (property: string) =>
+  getProperty(fn)(getDirValue(dp.l)(property))(`${property}-${dp.dir}`);
+
+// build a set of css properties for all directions
+const getWithDirections = (dps: any[]) => (fn: any) => (property: string) => (props: any) => dps
+  .map(d => getDirectionalProperty(fn)(d)(property)(props))
+  .filter(complement(isEmpty))
+  .join("\n");
+;
+
+const getLiteral = getProperty(identity);
+
+export {
+  getProperty,
+  getWithDirections,
+  getLiteral,
+};

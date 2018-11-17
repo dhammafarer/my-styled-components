@@ -1,63 +1,34 @@
 import { Scale, styled, css, theme } from "src/theme";
-import { prop, reduce, either, isNil } from "ramda";
+import { getProperty, getLiteral, getWithDirections } from "./getters";
+import { prop } from "ramda";
 
-type DirectionProp = "padding" | "margin";
-type DirectionName = "right" | "left" | "top" | "bottom";
-type DirectionCode = "r" | "l" | "t" | "b";
-type DirectionAxis = "x" | "y";
-
-interface Direction {
-  code: DirectionCode;
-  name: DirectionName;
-  axis: DirectionAxis;
-}
-
-const directions: Direction[] = [
-  {code: "r", axis: "x", name: "right"},
-  {code: "l", axis: "x", name: "left"},
-  {code: "t", axis: "y", name: "top"},
-  {code: "b", axis: "y", name: "bottom"},
+// directions map
+const dps = [
+  {dir: "left", l: ["l","x",""]},
+  {dir: "right", l: ["r","x",""]},
+  {dir: "top", l: ["t","y",""]},
+  {dir: "bottom", l: ["b","y",""]},
 ];
 
-const getEither = reduce(either, isNil);
+const getDirectionalProperty = getWithDirections(dps)(theme.space);
+const getPadding = getDirectionalProperty("padding");
+const getMargins = getDirectionalProperty("margin");
 
-// constructs a string with prop-direction values from a scale
-const getWithDirectionFrom = (scaleFn: any) => (key: DirectionProp) => (props: any) => {
-  const k = key.slice(0, 1);
+const getFromColor = getProperty(theme.color);
+const getBackground = getFromColor(prop("bg"))("background");
+const getColor = getFromColor(prop("color"))("color");
+const getBorderColor = getFromColor(prop("borderColor"))("border-color");
 
-  return directions
-    .reduce((acc, dir) => {
-      const list = [prop(k + dir.code), prop(k + dir.axis), prop(k)];
-      //const val = (props[k + dir.code] || props[k + dir.axis] || props[k]);
-      const val = getEither(list)(props);
-      return acc + (val ? `${key}-${dir.name}: ${scaleFn(val)};\n` : "");
-    }, "");
-}
+const getBoxShadow = getProperty(theme.shadow)(prop("shadow"))("box-shadow");
+const getBorder = getProperty(theme.border)(prop("border"))("border");
+const getBorderRadius = getProperty(theme.radius)(prop("radius"))("border-radius");
 
-const getSpacedDirectionFor = getWithDirectionFrom(theme.space);
-const getMargins = getSpacedDirectionFor("margin");
-const getPadding = getSpacedDirectionFor("padding");
+const getFontWeight = getProperty(theme.fontWeight)(prop("fontWeight"))("font-weight");
+const getFontFamily = getProperty(theme.fontWeight)(prop("fontFamily"))("font-family");
 
-const getValFrom = (spaceFn: any) => (key: string, propName: string) => (props: any) => {
-  return (props[propName] ? `${key}: ${spaceFn(props[propName])};` : "");
-};
-
-const getVal = (key: string, code: string) => (props: any) => {
-  return (props[code] ? `${key}: ${props[code]};` : "");
-};
-
-const getFromColor = getValFrom(theme.color);
-
-const getBackground = getFromColor("background", "bg");
-const getColor = getFromColor("color", "color");
-const getBoxShadow = getValFrom(theme.shadow)("box-shadow", "shadow");
-const getBorder = getValFrom(theme.border)("border", "border");
-const getBorderColor = getValFrom(theme.color)("border-color", "borderColor");
-const getBorderRadius = getValFrom(theme.radius)("border-radius", "radius");
-const getFontWeight = getValFrom(theme.fontWeight)("font-weight", "fontWeight");
-const getFontFamily = getValFrom(theme.fontFamily)("font-family", "fontFamily");
-const getLineHeight = getValFrom(theme.lineHeight)("line-height", "lineHeight");
-const getLetterSpacing = getValFrom(theme.letterSpacing)("letter-spacing", "letterSpacing");
+const getLineHeight = getProperty(theme.lineHeight)(prop("lineHeight"))("line-height");
+const getLetterSpacing = getProperty(theme.letterSpacing)(prop("letterSpacing"))("letter-spacing");
+const getTextTransform = getLiteral(prop("textTransform"))("text-transform");
 
 type Width = string | number;
 
@@ -161,10 +132,10 @@ const box = css<BoxProps>`
 const flex = css<FlexProps>`
   ${box}
   ${props => css`
-    ${getVal("flex-direction", "flexDirection")(props)}
-    ${getVal("flex-wrap", "flexWrap")(props)}
-    ${getVal("justify-content", "justifyContent")(props)}
-    ${getVal("align-items", "alignItems")(props)}
+    ${getLiteral(prop("flexDirection"))("flex-direction")(props)}
+    ${getLiteral(prop("flexWrap"))("flex-wrap")(props)}
+    ${getLiteral(prop("justifyContent"))("justify-content")(props)}
+    ${getLiteral(prop("alignItems"))("align-items")(props)}
   `}
   ${props => (props.spacing && props.spacing > 0) && css`
     padding: ${props.theme.space(props.spacing)};
@@ -195,7 +166,7 @@ const text = css<TextProps>`
     ${getFontFamily(props)}
     ${getLineHeight(props)}
     ${getLetterSpacing(props)}
-    ${getVal("text-transform", "textTransform")(props)}
+    ${getTextTransform(props)}
   `}
   font-family: ${theme.fontFamily("sans")};
   margin: 0;
@@ -214,7 +185,7 @@ const button = css<ButtonProps>`
     ${getFontFamily(props)}
     ${getLineHeight(props)}
     ${getLetterSpacing(props)}
-    ${getVal("text-transform", "textTransform")(props)}
+    ${getTextTransform(props)}
   `}
   font-family: ${theme.fontFamily("sans")};
   text-decoration: none;

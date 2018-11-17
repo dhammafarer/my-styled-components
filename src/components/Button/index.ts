@@ -4,7 +4,7 @@ import { styled, css, theme } from "src/theme";
 interface ButtonProps {
   to?: string;
   variant?: "primary" | "secondary" | "white";
-  fill?: boolean;
+  contained?: boolean;
 }
 
 const defaultStyle = css<ButtonProps>`
@@ -28,21 +28,21 @@ const defaultStyle = css<ButtonProps>`
 `;
 
 const byVariant = (props: any) => {
-  const {variant, fill} = props;
+  const {variant, contained} = props;
 
   if (!variant) return null;
 
   return css<ButtonProps>`
     border-color: ${theme.color("secondary.main")};
-    color: ${theme.color(fill ? "common.white" : "secondary.main")};
-    background: ${fill ? theme.color("secondary.main") : "transparent"};
+    color: ${theme.color(contained ? "common.white" : "secondary.main")};
+    background: ${contained ? theme.color("secondary.main") : "transparent"};
     &:hover {
       border-color: ${theme.color("secondary.light")};
-      background: ${theme.color(fill ? "secondary.light" : "transparent")};
+      background: ${theme.color(contained ? "secondary.light" : "transparent")};
     }
     &:focus {
       outline: none;
-      background: ${theme.color(fill ? "secondary.dark" : "grey.100")};
+      background: ${theme.color(contained ? "secondary.dark" : "grey.100")};
     }
   `;
 }

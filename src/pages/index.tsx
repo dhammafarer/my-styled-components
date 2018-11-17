@@ -22,7 +22,7 @@ const IndexPage: React.SFC<{}> = (() => {
             <Button
               width={[1]}
               variant="secondary"
-              fill
+              contained
             >
               OK
             </Button>
