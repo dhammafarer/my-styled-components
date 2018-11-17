@@ -7,6 +7,8 @@ type DirectionCode = "r" | "l" | "t" | "b" | "x" | "y" | "";
 const template = (key:string, val: string) => `${key}: ${val};`;
 
 // parse props to build a css property as a string
+// fn is a function that interprets the property value,
+// eg. a scaled property from theme
 const getProperty = (fn: any) => (getter: any) => (property: string) => (props: any) =>
   ifElse(
     isNil,
@@ -14,6 +16,9 @@ const getProperty = (fn: any) => (getter: any) => (property: string) => (props: 
     x => template(property, fn(x))
   )(getter(props)
 );
+
+// a getter for literal property values
+const getLiteral = getProperty(identity);
 
 // prefix each DirectionCode with property identifier, e.g. pr, ml, etc.
 const prefixProp = (pref: string) => compose(prop, concat(pref));
@@ -40,8 +45,6 @@ const getWithDirections = (dps: any[]) => (fn: any) => (property: string) => (pr
   .filter(complement(isEmpty))
   .join("\n");
 ;
-
-const getLiteral = getProperty(identity);
 
 export {
   getProperty,
