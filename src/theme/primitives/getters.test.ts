@@ -1,32 +1,52 @@
 import { isEmpty, ifElse, always, complement, identity, map, compose, concat, prop, reduce, either, isNil } from "ramda";
 
-const propPrefix = (p:string) => compose(prop, concat(p));
+type Direction = "right" | "left" | "top" | "bottom";
+type DirectionCode = "r" | "l" | "t" | "b" | "x" | "y" | "";
 
-const makeList = (list: string[]) => (p: string) => map(propPrefix(p), list);
-
-const getEither = reduce(either, isNil);
-
-const getCode = (p: string) => p.slice(0,1);
-
-const getDir = (l: string[]) => (p: string) => getEither(makeList(l)(getCode(p)));
-
+// css property template
 const template = (key:string, val: string) => `${key}: ${val};`;
 
-const getProperty = (fn: any) => (getter: any) => (property: string) => (props: any) => ifElse(
-  isNil,
-  always(""),
-  x => template(property, fn(x)))
-(getter(props)
+// parse props to build a css property as a string
+const getProperty = (fn: any) => (getter: any) => (property: string) => (props: any) =>
+  ifElse(
+    isNil,
+    always(""),
+    x => template(property, fn(x))
+  )(getter(props)
 );
 
-const getDirectionalProperty = (fn: any) => (dp: {dir: string, l: string[]}) => (property: string) =>
-  getProperty(fn)(getDir(dp.l)(property))(`${property}-${dp.dir}`);
+// prefix each DirectionCode with property identifier, e.g. pr, ml, etc.
+const prefixProp = (pref: string) => compose(prop, concat(pref));
 
-const getWithDirections = (fn: any) => (dps: any[]) => (property: string) => (props: any) => dps
+// make a prefix to identify property
+const getPrefix = (property: string) => property.slice(0,1);
+
+// make a prefixed priority list of direction codes
+const makeList = (list: DirectionCode[]) => (pref: string) => map(prefixProp(pref), list);
+
+// helper function to get a property by applying a list of getter functions
+const getEither = reduce(either, isNil);
+
+// extract the property with direction value from props
+const getDirValue = (l: DirectionCode[]) => (p: string) => getEither(makeList(l)(getPrefix(p)));
+
+// build a css property with direction
+const getDirectionalProperty = (fn: any) => (dp: {dir: Direction, l: DirectionCode[]}) => (property: string) =>
+  getProperty(fn)(getDirValue(dp.l)(property))(`${property}-${dp.dir}`);
+
+// build a set of css properties for all directions
+const getWithDirections = (dps: any[]) => (fn: any) => (property: string) => (props: any) => dps
   .map(d => getDirectionalProperty(fn)(d)(property)(props))
   .filter(complement(isEmpty))
   .join("\n");
 ;
+
+const dps = [
+  {dir: "left", l: ["l","x",""]},
+  {dir: "right", l: ["r","x",""]},
+  {dir: "top", l: ["t","y",""]},
+  {dir: "bottom", l: ["b","y",""]},
+];
 
 test("getProperty works for simple properties", () => {
   expect(getProperty(identity)(prop("color"))("color")({color: "red"})).toBe("color: red;");
@@ -37,10 +57,5 @@ test("getProperty works for directional properties", () => {
 });
 
 test("getWithDirections", () => {
-  expect(getWithDirections(identity)([
-    {dir: "left", l: ["l","x",""]},
-    {dir: "right", l: ["r","x",""]},
-    {dir: "top", l: ["t","y",""]},
-    {dir: "bottom", l: ["b","y",""]},
-  ])("padding")({pl: 1, px: 2})).toBe("padding-left: 1;\npadding-right: 2;");
+  expect(getWithDirections(dps)(identity)("padding")({pl: 1, px: 2})).toBe("padding-left: 1;\npadding-right: 2;");
 });
