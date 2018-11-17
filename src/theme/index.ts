@@ -35,7 +35,6 @@ const letterSpacings = {
   mega: "0.25em",
 };
 
-
 const space = (val: SpaceScale) => sizes[val];
 const fontSize = (val: FontSizeScale) => fontSizes[val];
 const fontWeight = (val: FontWeightScale) => fontWeights[val];

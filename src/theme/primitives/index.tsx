@@ -1,5 +1,5 @@
 import { Scale, styled, css, theme } from "src/theme";
-import { getProperty, getLiteral, getWithDirections } from "./getters";
+import { getP, getProperty, getLiteral, getWithDirections } from "./getters";
 import { prop } from "ramda";
 
 // directions map
@@ -30,22 +30,15 @@ const getLineHeight = getProperty(theme.lineHeight)(prop("lineHeight"))("line-he
 const getLetterSpacing = getProperty(theme.letterSpacing)(prop("letterSpacing"))("letter-spacing");
 const getTextTransform = getLiteral(prop("textTransform"))("text-transform");
 
+const getResponsive = getP((property: string, vals: any[], fn: any) =>
+  vals.map(v => `${property}: ${fn(v)}`).map(theme.media)
+);
+
 type Width = string | number;
+const parseWidth = (v: Width) => (typeof v === "number" ? `${v * 100}%` : v);
+const getWidth = getResponsive(parseWidth)(prop("width"))("width");
 
-const width = (xs: Width[]) => xs
-  .map((x) => {
-    const val = (typeof x === "number" ? `${x * 100}%` : x);
-    return `width: ${val};`;
-  })
-  .map(theme.media);
-
-const getWidth = (props: any) => (props.width ? width(props.width) : "");
-
-const fontSize = (xs: Scale[]) => xs
-  .map(x => `font-size: ${theme.fontSize(x)};`)
-  .map(theme.media);
-
-const getFontSize = (props: any) => (props.fontSize ? fontSize(props.fontSize) : "");
+const getFontSize = getResponsive(theme.fontSize)(prop("fontSize"))("font-size");
 
 interface SpaceProps {
   p?: Scale;
