@@ -17,14 +17,22 @@ const getProperty = (fn: any) => (getter: any) => (property: string) => (props: 
   return (val ? template(property, (val)) : "");
 }
 
-const getDirectionalProperty = (dp: {dir: string, l: string[]}) => (property: string) =>
-  getProperty(identity)(getDir(dp.l)(property))(`${property}-${dp.dir}`);
+const getDirectionalProperty = (fn: any) => (dp: {dir: string, l: string[]}) => (property: string) =>
+  getProperty(fn)(getDir(dp.l)(property))(`${property}-${dp.dir}`);
 
+const getWithDirections = (fn: any) => (dps: any[]) => (property: string) => (props: any) => dps
+  .map(d => getDirectionalProperty(fn)(d)(property)(props))
+  .join("\n");
+;
 
 test("getProperty works for simple properties", () => {
   expect(getProperty(identity)(prop("color"))("color")({color: "red"})).toBe("color: red;");
 });
 
 test("getProperty works for directional properties", () => {
-  expect(getDirectionalProperty({l:["l","x",""], dir: "left"})("padding")({pl: 1, px: 2, p: 3})).toBe("padding-left: 1;");
+  expect(getDirectionalProperty(identity)({l:["l","x",""], dir: "left"})("padding")({pl: 1, px: 2, p: 3})).toBe("padding-left: 1;");
+});
+
+test("getWithDirections", () => {
+  expect(getWithDirections(identity)([{dir: "left", l: ["l","x",""]}])("padding")({pl: 1, px: 2, p: 3})).toBe("padding-left: 1;");
 });
