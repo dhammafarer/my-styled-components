@@ -1,4 +1,5 @@
 import { Scale, styled, css, theme } from "src/theme";
+import { prop, reduce, either, isNil } from "ramda";
 
 type DirectionProp = "padding" | "margin";
 type DirectionName = "right" | "left" | "top" | "bottom";
@@ -18,13 +19,17 @@ const directions: Direction[] = [
   {code: "b", axis: "y", name: "bottom"},
 ];
 
+const getEither = reduce(either, isNil);
+
 // constructs a string with prop-direction values from a scale
 const getWithDirectionFrom = (scaleFn: any) => (key: DirectionProp) => (props: any) => {
   const k = key.slice(0, 1);
 
   return directions
     .reduce((acc, dir) => {
-      const val = (props[k + dir.code] || props[k + dir.axis] || props[k]);
+      const list = [prop(k + dir.code), prop(k + dir.axis), prop(k)];
+      //const val = (props[k + dir.code] || props[k + dir.axis] || props[k]);
+      const val = getEither(list)(props);
       return acc + (val ? `${key}-${dir.name}: ${scaleFn(val)};\n` : "");
     }, "");
 }
